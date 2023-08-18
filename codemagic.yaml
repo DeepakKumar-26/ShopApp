@@ -1,5 +1,45 @@
 workflows:
-    sample-workflow:
-        name: Codemagic Sample Workflow
-        max_build_duration: 120
-        instance_type: mac_mini_m
+  version: 2
+  build:
+    name: Build
+    # You can customize the trigger for your workflow here, e.g., on push to specific branches.
+    # By default, it triggers on any push.
+    on:
+      push:
+        branches:
+          - main
+
+    # Define the jobs that will run as part of this workflow.
+    jobs:
+      - name: Build Android
+        # You can specify the virtual machine type and environment for Android builds.
+        # For React Native Android builds, you'll need a Linux-based environment.
+        # Codemagic provides a variety of pre-configured environments.
+        environment:
+          vars:
+            # Define any necessary environment variables here.
+            # For example, you might set up API keys, tokens, or other sensitive data.
+            # MY_ENV_VAR: "my_secret_value"
+        scripts:
+          # Run commands to set up your Android environment and build the app.
+          - echo "Building Android app..."
+          - echo "Running npm install..."
+          - npm install
+          - echo "Running React Native Android build..."
+          - npx react-native run-android
+
+      - name: Build iOS
+        # For React Native iOS builds, you'll need a macOS-based environment.
+        # Codemagic provides macOS environments for building iOS apps.
+        environment:
+          macos:
+            xcode: latest
+        scripts:
+          # Run commands to set up your iOS environment and build the app.
+          - echo "Building iOS app..."
+          - echo "Running npm install..."
+          - npm install
+          - echo "Running React Native iOS build..."
+          - npx react-native run-ios
+
+# You can define post-build steps or notifications here if needed.
